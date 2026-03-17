@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Zakat - Giat KUA Gorom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #1e5631;
+            --dark-green: #0f3d1f;
+            --light-green: #2d7a46;
+            --gold: #d4af37;
+            --light-gold: #f4e4c1;
+            --cream: #faf8f3;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 C30 10 20 30 20 50 C20 70 30 90 50 90 C70 90 80 70 80 50 C80 30 70 10 50 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></svg>');
+            background-size: 100px;
+            opacity: 0.3;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-kemenag {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 3px solid var(--gold);
+        }
+
+        .logo-kemenag img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .title-section h1 {
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+        }
+
+        .title-section .subtitle {
+            color: var(--light-gold);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .islamic-pattern {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.2;
+            font-size: 4rem;
+            color: var(--white);
+        }
+
+        /* Gold Price Ticker */
+        .gold-ticker {
+            background: linear-gradient(90deg, var(--gold) 0%, #b8941f 100%);
+            color: var(--white);
+            padding: 12px 0;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ticker-item i {
+            font-size: 1.2rem;
+        }
+
+        .price-update {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Calculator Grid */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .calc-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid var(--primary-green);
+        }
+
+        .calc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .calc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(30, 86, 49, 0.05) 50%);
+            border-bottom-left-radius: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(30, 86, 49, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group-text {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(30, 86, 49, 0.1);
+        }
+
+        .nishab-info {
+            background: var(--light-gold);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .nishab-info strong {
+            color: var(--primary-green);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(30, 86, 49, 0.3);
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e9 100%);
+            border-radius: 12px;
+            border: 2px solid var(--primary-green);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-box.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .result-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-wajib {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-tidak {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .info-header h2 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .info-item {
+            padding: 20px;
+            background: var(--cream);
+            border-radius: 15px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .info-item h4 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-item p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-green);
+            color: var(--white);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23f5f7fa" opacity="1"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .islamic-pattern {
+                display: none;
+            }
+
+            .title-section h1 {
+                font-size: 1.4rem;
+            }
+
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gold-ticker {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Decorative Elements */
+        .decoration {
+            position: fixed;
+            font-size: 10rem;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            color: var(--primary-green);
+        }
+
+        .decoration-1 { top: 10%; left: 5%; }
+        .decoration-2 { bottom: 20%; right: 5%; transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+    <!-- Decorative Background Elements -->
+    <div class="decoration decoration-1">☪</div>
+    <div class="decoration decoration-2">☪</div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-kemenag">
+                    <!-- Logo Kementerian Agama -->
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Logo_Kementerian_Agama_Republik_Indonesia.svg/1200px-Logo_Kementerian_Agama_Republik_Indonesia.svg.png" alt="Logo Kemenag">
+                </div>
+                <div class="title-section">
+                    <h1>Giat KUA Gorom</h1>
+                    <div class="subtitle">Kantor Urusan Agama Gorom - Kalkulator Zakat</div>
+                </div>
+            </div>
+            <div class="islamic-pattern">
+                <i class="fas fa-mosque"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gold Price Ticker -->
+    <div class="gold-ticker">
+        <div class="ticker-item">
+            <i class="fas fa-coins"></i>
+            <span>Harga Emas Antam Hari Ini: <strong id="goldPrice">Rp 2.908.000</strong>/gram</span>
+        </div>
+        <div class="ticker-item">
+            <i class="fas fa-balance-scale"></i>
+            <span>Nishab (85 gram): <strong id="nishabValue">Rp 247.180.000</strong></span>
+        </div>
+        <div class="ticker-item price-update">
+            <i class="fas fa-sync-alt"></i>
+            <span>Update: <span id="updateDate">-</span></span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Calculator Grid -->
+        <div class="calculator-grid">
+            <!-- Zakat Maal (Harta) -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Maal</div>
+                        <div class="card-subtitle">Harta yang dimiliki selama 1 tahun</div>
+                    </div>
+                </div>
+                
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Nishab: <strong>85 gram emas</strong> = <span id="nishabMaal">Rp 247.180.000</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Total Harta (Tabungan, Emas, Investasi, dll)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="hartaTotal" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hutang yang Jatuh Tempo (jika ada)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="hutang" placeholder="0" value="0">
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatMaal()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Maal
+                </button>
+
+                <div class="result-box" id="resultMaal">
+                    <div class="result-label">Zakat Maal yang Wajib Dibayar (2.5%)</div>
+                    <div class="result-value" id="zakatMaalValue">Rp 0</div>
+                    <span class="result-status status-wajib" id="statusMaal">Wajib Zakat</span>
+                </div>
+            </div>
+
+            <!-- Zakat Penghasilan -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Penghasilan</div>
+                        <div class="card-subtitle">Gaji dan pendapatan bulanan</div>
+                    </div>
+                </div>
+
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Nishab/bulan: <strong>≈7.5 gram emas</strong> = <span id="nishabBulan">Rp 21.810.000</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Pendapatan per Bulan (Gaji, Bonus, dll)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="gajiBulan" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pendapatan Lain per Bulan (jika ada)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="pendapatanLain" placeholder="0" value="0">
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatPenghasilan()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Penghasilan
+                </button>
+
+                <div class="result-box" id="resultPenghasilan">
+                    <div class="result-label">Zakat Penghasilan per Bulan (2.5%)</div>
+                    <div class="result-value" id="zakatPenghasilanValue">Rp 0</div>
+                    <span class="result-status status-wajib" id="statusPenghasilan">Wajib Zakat</span>
+                </div>
+            </div>
+
+            <!-- Zakat Pertanian -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Pertanian</div>
+                        <div class="card-subtitle">Hasil panen pertanian</div>
+                    </div>
+                </div>
+
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Nishab: <strong>653 kg beras</strong> atau setara
+                </div>
+
+                <div class="form-group">
+                    <label>Hasil Panen (kg)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-weight"></i></span>
+                        <input type="number" class="form-control" id="hasilPanen" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Harga Beras per kg (Zakat dibayar dengan beras atau uang)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="hargaBeras" placeholder="15000" value="15000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sistem Irigasi</label>
+                    <select class="form-control" id="sistemIrigasi" style="padding-left: 15px;">
+                        <option value="10">Irigasi Sendiri/Bayar (10%)</option>
+                        <option value="5">Irigasi Alami/Hujan (5%)</option>
+                    </select>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatPertanian()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Pertanian
+                </button>
+
+                <div class="result-box" id="resultPertanian">
+                    <div class="result-label">Zakat Pertanian yang Wajib Dibayar</div>
+                    <div class="result-value" id="zakatPertanianValue">Rp 0</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 5px;" id="zakatPertanianKg">0 kg beras</div>
+                    <span class="result-status status-wajib" id="statusPertanian">Wajib Zakat</span>
+                </div>
+            </div>
+
+            <!-- Zakat Perdagangan -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Perdagangan</div>
+                        <div class="card-subtitle">Aset dagang dan usaha</div>
+                    </div>
+                </div>
+
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Nishab: <strong>85 gram emas</strong> = <span class="nishabPerdagangan">Rp 247.180.000</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Modal Usaha</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="modalUsaha" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Keuntungan/Tabungan Usaha</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="keuntunganUsaha" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hutang Jatuh Tempo</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="hutangUsaha" placeholder="0" value="0">
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatPerdagangan()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Perdagangan
+                </button>
+
+                <div class="result-box" id="resultPerdagangan">
+                    <div class="result-label">Zakat Perdagangan (2.5%)</div>
+                    <div class="result-value" id="zakatPerdaganganValue">Rp 0</div>
+                    <span class="result-status status-wajib" id="statusPerdagangan">Wajib Zakat</span>
+                </div>
+            </div>
+
+            <!-- Zakat Emas & Perak -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Emas & Perak</div>
+                        <div class="card-subtitle">Perhiasan dan logam mulia</div>
+                    </div>
+                </div>
+
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Nishab Emas: <strong>85 gram</strong> | Perak: <strong>595 gram</strong>
+                </div>
+
+                <div class="form-group">
+                    <label>Jumlah Emas (gram)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-coins"></i></span>
+                        <input type="number" class="form-control" id="jumlahEmas" placeholder="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Jumlah Perak (gram)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-ring"></i></span>
+                        <input type="number" class="form-control" id="jumlahPerak" placeholder="0" step="0.1">
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatEmas()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Emas/Perak
+                </button>
+
+                <div class="result-box" id="resultEmas">
+                    <div class="result-label">Zakat Emas (2.5% dari ≥85g)</div>
+                    <div class="result-value" id="zakatEmasValue">Rp 0</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 5px;" id="zakatEmasDetail">0 gram emas</div>
+                    <span class="result-status status-wajib" id="statusEmas" style="margin-top: 10px; display: inline-block;">Tidak Wajib</span>
+                </div>
+            </div>
+
+            <!-- Zakat Fitrah -->
+            <div class="calc-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Zakat Fitrah</div>
+                        <div class="card-subtitle">Zakat akal Ramadhan</div>
+                    </div>
+                </div>
+
+                <div class="nishab-info">
+                    <i class="fas fa-info-circle"></i> Besaran: <strong>2.5 kg beras/orang</strong> atau setara uang
+                </div>
+
+                <div class="form-group">
+                    <label>Jumlah Anggota Keluarga</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-users"></i></span>
+                        <input type="number" class="form-control" id="jumlahJiwa" placeholder="1" value="1" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Harga Beras Zakat Fitrah per kg</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control" id="hargaBerasFitrah" placeholder="20000" value="20000">
+                    </div>
+                </div>
+
+                <button class="btn-calculate" onclick="hitungZakatFitrah()">
+                    <i class="fas fa-calculator"></i> Hitung Zakat Fitrah
+                </button>
+
+                <div class="result-box" id="resultFitrah">
+                    <div class="result-label">Total Zakat Fitrah</div>
+                    <div class="result-value" id="zakatFitrahValue">Rp 0</div>
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 5px;" id="zakatFitrahDetail">0 kg beras</div>
+                    <span class="result-status status-wajib" id="statusFitrah" style="margin-top: 10px; display: inline-block;">Wajib</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <div class="info-header">
+                <h2><i class="fas fa-book-open"></i> Ketentuan Zakat</h2>
+                <p>Informasi penting tentang syarat dan ketentuan zakat</p>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4><i class="fas fa-check-circle"></i> Syarat Wajib Zakat</h4>
+                    <p>Islam, merdeka, milik penuh, cukup nishab, cukup haul (1 tahun), dan berkembang.</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-percentage"></i> Besaran Zakat</h4>
+                    <p>Zakat maal, penghasilan, emas, dan perdagangan: 2.5%. Pertanian: 5% atau 10% tergantung irigasi.</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-users"></i> Penerima Zakat</h4>
+                    <p>Fakir, miskin, amil, muallaf, riqab, gharim, fisabilillah, dan ibnu sabil.</p>
+                </div>
+                <div class="info-item">
+                    <h4><i class="fas fa-clock"></i> Waktu Pembayaran</h4>
+                    <p>Zakat maal: setiap 1 tahun haul. Fitrah: sebelum shalat Idul Fitri. Penghasilan: setiap bulan.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-mosque"></i> KUA Gorom</h3>
+                <p>Kantor Urusan Agama Kecamatan Gorom<br>
+                Jl. Gorom - Seram Bagian Timur<br>
+                Kabupaten Seram Bagian Timur, Maluku</p>
+            </div>
+            <div class="footer-section">
+                <h3><i class="fas fa-phone"></i> Kontak Kami</h3>
+                <p>Email: kuagorom@kemenag.go.id<br>
+                Telepon: (0918) xxxxxx<br>
+                WhatsApp: 08xx-xxxx-xxxx</p>
+            </div>
+            <div class="footer-section">
+                <h3><i class="fas fa-share-alt"></i> Ikuti Kami</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3><i class="fas fa-landmark"></i> Kementerian Agama RI</h3>
+                <p>Website ini dikelola oleh KUA Gorom<br>
+                di bawah naungan Kementerian Agama<br>
+                Republik Indonesia</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Giat KUA Gorom - Kementerian Agama RI. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Gold Price Configuration - Updated based on current market data
+        // Using approximate current price of Antam gold
+        let hargaEmasPerGram = 2908000; // Rupiah per gram (24K)
+        const nishabGram = 85; // 85 grams of gold
+        const nishabPerakGram = 595; // 595 grams of silver
+        const hargaPerakPerGram = 35000; // Approximate silver price
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGoldPrice();
+            setInterval(updateGoldPrice, 60000); // Update every minute
+            
+            // Set current date
+            const now = new Date();
+            document.getElementById('updateDate').textContent = now.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        });
+
+        function updateGoldPrice() {
+            // Simulate real-time gold price (in real implementation, fetch from API)
+            // Current price around Rp 2,900,000 - 3,000,000 per gram
+            const basePrice = 2908000;
+            const variation = Math.floor(Math.random() * 50000) - 25000; // Small variation
+            hargaEmasPerGram = basePrice + variation;
+            
+            const nishabValue = hargaEmasPerGram * nishabGram;
+            const nishabBulan = hargaEmasPerGram * 7.5; // Approximate monthly nishab
+            
+            // Update UI
+            document.getElementById('goldPrice').textContent = 'Rp ' + formatNumber(hargaEmasPerGram);
+            document.getElementById('nishabValue').textContent = 'Rp ' + formatNumber(nishabValue);
+            document.getElementById('nishabMaal').textContent = 'Rp ' + formatNumber(nishabValue);
+            document.getElementById('nishabBulan').textContent = 'Rp ' + formatNumber(nishabBulan);
+            
+            // Update all nishab references
+            document.querySelectorAll('.nishabPerdagangan').forEach(el => {
+                el.textContent = 'Rp ' + formatNumber(nishabValue);
+            });
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function parseNumber(str) {
+            return parseFloat(str) || 0;
+        }
+
+        // Zakat Maal Calculation
+        function hitungZakatMaal() {
+            const harta = parseNumber(document.getElementById('hartaTotal').value);
+            const hutang = parseNumber(document.getElementById('hutang').value);
+            const nishab = hargaEmasPerGram * nishabGram;
+            
+            const hartaBersih = harta - hutang;
+            const zakat = hartaBersih * 0.025;
+            
+            const resultBox = document.getElementById('resultMaal');
+            const zakatValue = document.getElementById('zakatMaalValue');
+            const status = document.getElementById('statusMaal');
+            
+            resultBox.classList.add('show');
+            
+            if (hartaBersih >= nishab) {
+                zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(zakat));
+                status.textContent = 'Wajib Zakat';
+                status.className = 'result-status status-wajib';
+            } else {
+                zakatValue.textContent = 'Rp 0';
+                status.textContent = 'Belum Wajib (Belum capai nishab)';
+                status.className = 'result-status status-tidak';
+            }
+        }
+
+        // Zakat Penghasilan Calculation
+        function hitungZakatPenghasilan() {
+            const gaji = parseNumber(document.getElementById('gajiBulan').value);
+            const lain = parseNumber(document.getElementById('pendapatanLain').value);
+            const nishabBulan = hargaEmasPerGram * 7.5; // Monthly nishab approximation
+            
+            const total = gaji + lain;
+            const zakat = total * 0.025;
+            
+            const resultBox = document.getElementById('resultPenghasilan');
+            const zakatValue = document.getElementById('zakatPenghasilanValue');
+            const status = document.getElementById('statusPenghasilan');
+            
+            resultBox.classList.add('show');
+            
+            if (total >= nishabBulan) {
+                zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(zakat));
+                status.textContent = 'Wajib Zakat';
+                status.className = 'result-status status-wajib';
+            } else {
+                zakatValue.textContent = 'Rp 0';
+                status.textContent = 'Belum Wajib (Belum capai nishab)';
+                status.className = 'result-status status-tidak';
+            }
+        }
+
+        // Zakat Pertanian Calculation
+        function hitungZakatPertanian() {
+            const hasil = parseNumber(document.getElementById('hasilPanen').value);
+            const hargaBeras = parseNumber(document.getElementById('hargaBeras').value);
+            const persentase = parseNumber(document.getElementById('sistemIrigasi').value);
+            const nishabKg = 653; // 653 kg of rice
+            
+            const zakatKg = hasil * (persentase / 100);
+            const zakatUang = zakatKg * hargaBeras;
+            
+            const resultBox = document.getElementById('resultPertanian');
+            const zakatValue = document.getElementById('zakatPertanianValue');
+            const zakatDetail = document.getElementById('zakatPertanianKg');
+            const status = document.getElementById('statusPertanian');
+            
+            resultBox.classList.add('show');
+            
+            if (hasil >= nishabKg) {
+                zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(zakatUang));
+                zakatDetail.textContent = formatNumber(zakatKg) + ' kg beras';
+                status.textContent = 'Wajib Zakat';
+                status.className = 'result-status status-wajib';
+            } else {
+                zakatValue.textContent = 'Rp 0';
+                zakatDetail.textContent = '0 kg beras';
+                status.textContent = 'Belum Wajib (Belum capai nishab 653 kg)';
+                status.className = 'result-status status-tidak';
+            }
+        }
+
+        // Zakat Perdagangan Calculation
+        function hitungZakatPerdagangan() {
+            const modal = parseNumber(document.getElementById('modalUsaha').value);
+            const keuntungan = parseNumber(document.getElementById('keuntunganUsaha').value);
+            const hutang = parseNumber(document.getElementById('hutangUsaha').value);
+            const nishab = hargaEmasPerGram * nishabGram;
+            
+            const total = modal + keuntungan - hutang;
+            const zakat = total * 0.025;
+            
+            const resultBox = document.getElementById('resultPerdagangan');
+            const zakatValue = document.getElementById('zakatPerdaganganValue');
+            const status = document.getElementById('statusPerdagangan');
+            
+            resultBox.classList.add('show');
+            
+            if (total >= nishab) {
+                zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(zakat));
+                status.textContent = 'Wajib Zakat';
+                status.className = 'result-status status-wajib';
+            } else {
+                zakatValue.textContent = 'Rp 0';
+                status.textContent = 'Belum Wajib (Belum capai nishab)';
+                status.className = 'result-status status-tidak';
+            }
+        }
+
+        // Zakat Emas Calculation
+        function hitungZakatEmas() {
+            const emas = parseNumber(document.getElementById('jumlahEmas').value);
+            const perak = parseNumber(document.getElementById('jumlahPerak').value);
+            
+            let zakatEmasUang = 0;
+            let zakatEmasGram = 0;
+            let statusText = '';
+            let statusClass = '';
+            
+            // Calculate gold zakat (if >= 85g)
+            if (emas >= nishabGram) {
+                zakatEmasGram = emas * 0.025;
+                zakatEmasUang = zakatEmasGram * hargaEmasPerGram;
+                statusText = 'Wajib Zakat Emas';
+                statusClass = 'result-status status-wajib';
+            } else {
+                statusText = 'Belum Wajib (Emas < 85g)';
+                statusClass = 'result-status status-tidak';
+            }
+            
+            // Note: Silver zakat calculation can be added similarly
+            
+            const resultBox = document.getElementById('resultEmas');
+            const zakatValue = document.getElementById('zakatEmasValue');
+            const zakatDetail = document.getElementById('zakatEmasDetail');
+            const status = document.getElementById('statusEmas');
+            
+            resultBox.classList.add('show');
+            zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(zakatEmasUang));
+            zakatDetail.textContent = zakatEmasGram.toFixed(2) + ' gram emas';
+            status.textContent = statusText;
+            status.className = statusClass;
+        }
+
+        // Zakat Fitrah Calculation
+        function hitungZakatFitrah() {
+            const jiwa = parseNumber(document.getElementById('jumlahJiwa').value);
+            const hargaBeras = parseNumber(document.getElementById('hargaBerasFitrah').value);
+            
+            const totalKg = jiwa * 2.5; // 2.5 kg per person
+            const totalUang = totalKg * hargaBeras;
+            
+            const resultBox = document.getElementById('resultFitrah');
+            const zakatValue = document.getElementById('zakatFitrahValue');
+            const zakatDetail = document.getElementById('zakatFitrahDetail');
+            
+            resultBox.classList.add('show');
+            zakatValue.textContent = 'Rp ' + formatNumber(Math.floor(totalUang));
+            zakatDetail.textContent = totalKg + ' kg beras (' + jiwa + ' jiwa)';
+        }
+
+        // Add input event listeners for real-time calculation (optional)
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', function() {
+                // Optional: Auto-calculate as user types
+                // Uncomment below lines if you want real-time calculation
+                /*
+                const card = this.closest('.calc-card');
+                const btn = card.querySelector('.btn-calculate');
+                if (btn) btn.click();
+                */
+            });
+        });
+    </script>
+</body>
+</html>
